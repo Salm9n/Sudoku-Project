@@ -12,13 +12,24 @@ namespace Assignment5
 {
     public partial class Form1 : Form
     {
+        Timer gameTimer = new Timer();
+        private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        private TimeSpan time = new TimeSpan();
         public Form1()
         {
             InitializeComponent();
             HideCursors();
+            timer.Interval = 100;
+            timer.Tick += new EventHandler(timer_tick);
+            timer.Enabled = true;
+           
         }
 
-       
+        private void timer_tick(object sender, EventArgs e)
+        {
+            time = time.Add(TimeSpan.FromMilliseconds(100));
+            label9.Text = string.Format("{0}:{1}", time.Minutes, time.Seconds);
+        }
 
         private void textBox1x1_TextChanged(object sender, EventArgs e)
         {
@@ -133,6 +144,28 @@ namespace Assignment5
             textBox80.GotFocus += Color_GotFocus;
             textBox81.GotFocus += Color_GotFocus;
             
+        }
+        int i = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            i++;
+            //label9.Text = i.ToString() + "Seconds elapsed";
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+            if (timer.Enabled)
+            {
+                timer.Enabled = false;
+                pauseButton.Text = "Resume";
+            }
+
+            else
+            {
+                timer.Enabled = true;
+                pauseButton.Text = "Pause";
+            }
+
         }
     }
 }
