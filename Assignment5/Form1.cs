@@ -17,7 +17,8 @@ namespace Assignment5
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private TimeSpan time = new TimeSpan();
         List<TextBox> sudokuBoxes = new List<TextBox>();
-        List<List<int>> easyList = new List<List<int>>();
+        List<Puzzle> puzzleList = new List<Puzzle>();
+
         public Form1()
         {
             InitializeComponent();
@@ -26,7 +27,16 @@ namespace Assignment5
             timer.Interval = 100;
             timer.Tick += new EventHandler(timer_tick);
             timer.Enabled = true;
-           
+
+            readDirectory();
+
+            int i = 0;
+            
+            foreach (int s in puzzleList[0].InitialPuzzle)
+            {
+                Console.WriteLine(i + ": " + s);
+                i++;
+            }
         }
 
         private void timer_tick(object sender, EventArgs e)
@@ -80,22 +90,44 @@ namespace Assignment5
 
         }
 
+        private void readDirectory()
+        {
+            string line;
+
+            StreamReader file = new System.IO.StreamReader("directory.txt");
+
+            while((line = file.ReadLine()) != null)
+            {
+                puzzleList.Add(new Puzzle(line));
+            }
+
+            file.Close();
+
+            /*
+            foreach (Puzzle p in puzzleList){
+                Console.WriteLine(p.Path);
+            }
+            */
+
+            getPuzzles();
+        }
+
         private void getPuzzles()
         {
-           /* try
+            StreamReader file;
+
+            foreach (Puzzle p in puzzleList)
             {
-                StreamReader inFile = new StreamReader("directory.txt");
-                String line;
-                String line2;
-                List<String[]> fileContents = new List<String[]>();
-                while ((line = inFile.ReadLine()) != null)
+                file = new System.IO.StreamReader(p.Path);
+
+                while ((file.Peek() >= '0' && file.Peek() <= '9') || file.Peek() == '\n')
                 {
-                    StreamReader inFile1 = new StreamReader(line);
-                    
-                  
+                    p.InitialPuzzle.Add((int)Char.GetNumericValue(Convert.ToChar(file.Read())));
                 }
-                inFile.Close();
-            } */
+
+                file.Close();
+            }
+
         }   
 
         private void HideCursors()
