@@ -127,6 +127,7 @@
             this.pauseButton = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
@@ -1233,7 +1234,7 @@
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(449, 50);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(133, 39);
+            this.label10.Size = new System.Drawing.Size(128, 38);
             this.label10.TabIndex = 95;
             this.label10.Text = "Sudoku";
             // 
@@ -1247,11 +1248,22 @@
             this.label11.TabIndex = 96;
             this.label11.Text = "Time Elapsed";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(22, 410);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 97;
+            this.button4.Text = "Reset";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1103, 634);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.pauseButton);
@@ -1455,6 +1467,7 @@
         private System.Windows.Forms.Button pauseButton;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button button4;
     }
 }
 

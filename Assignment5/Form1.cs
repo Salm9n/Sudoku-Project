@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,13 @@ namespace Assignment5
         Timer gameTimer = new Timer();
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private TimeSpan time = new TimeSpan();
+        List<TextBox> sudokuBoxes = new List<TextBox>();
+        List<List<int>> easyList = new List<List<int>>();
         public Form1()
         {
             InitializeComponent();
             HideCursors();
+            makeList();
             timer.Interval = 100;
             timer.Tick += new EventHandler(timer_tick);
             timer.Enabled = true;
@@ -29,6 +33,22 @@ namespace Assignment5
         {
             time = time.Add(TimeSpan.FromMilliseconds(100));
             label9.Text = string.Format("{0}:{1}", time.Minutes, time.Seconds);
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+            if (timer.Enabled)
+            {
+                timer.Enabled = false;
+                pauseButton.Text = "Resume";
+            }
+
+            else
+            {
+                timer.Enabled = true;
+                pauseButton.Text = "Pause";
+            }
+
         }
 
         private void textBox1x1_TextChanged(object sender, EventArgs e)
@@ -59,6 +79,24 @@ namespace Assignment5
         {
 
         }
+
+        private void getPuzzles()
+        {
+           /* try
+            {
+                StreamReader inFile = new StreamReader("directory.txt");
+                String line;
+                String line2;
+                List<String[]> fileContents = new List<String[]>();
+                while ((line = inFile.ReadLine()) != null)
+                {
+                    StreamReader inFile1 = new StreamReader(line);
+                    
+                  
+                }
+                inFile.Close();
+            } */
+        }   
 
         private void HideCursors()
         {
@@ -145,27 +183,102 @@ namespace Assignment5
             textBox81.GotFocus += Color_GotFocus;
             
         }
-        int i = 0;
+
+        private void makeList()
+        {
+            sudokuBoxes.Add(textBox1);
+            sudokuBoxes.Add(textBox2);
+            sudokuBoxes.Add(textBox3);
+            sudokuBoxes.Add(textBox4);
+            sudokuBoxes.Add(textBox5);
+            sudokuBoxes.Add(textBox6);
+            sudokuBoxes.Add(textBox7);
+            sudokuBoxes.Add(textBox8);
+            sudokuBoxes.Add(textBox9);
+            sudokuBoxes.Add(textBox10);
+            sudokuBoxes.Add(textBox11);
+            sudokuBoxes.Add(textBox12);
+            sudokuBoxes.Add(textBox13);
+            sudokuBoxes.Add(textBox14);
+            sudokuBoxes.Add(textBox15);
+            sudokuBoxes.Add(textBox16);
+            sudokuBoxes.Add(textBox17);
+            sudokuBoxes.Add(textBox18);
+            sudokuBoxes.Add(textBox19);
+            sudokuBoxes.Add(textBox20);
+            sudokuBoxes.Add(textBox21);
+            sudokuBoxes.Add(textBox22);
+            sudokuBoxes.Add(textBox23);
+            sudokuBoxes.Add(textBox24);
+            sudokuBoxes.Add(textBox25);
+            sudokuBoxes.Add(textBox26);
+            sudokuBoxes.Add(textBox27);
+            sudokuBoxes.Add(textBox28);
+            sudokuBoxes.Add(textBox29);
+            sudokuBoxes.Add(textBox30);
+            sudokuBoxes.Add(textBox31);
+            sudokuBoxes.Add(textBox32);
+            sudokuBoxes.Add(textBox33);
+            sudokuBoxes.Add(textBox34);
+            sudokuBoxes.Add(textBox35);
+            sudokuBoxes.Add(textBox36);
+            sudokuBoxes.Add(textBox37);
+            sudokuBoxes.Add(textBox38);
+            sudokuBoxes.Add(textBox39);
+            sudokuBoxes.Add(textBox40);
+            sudokuBoxes.Add(textBox41);
+            sudokuBoxes.Add(textBox42);
+            sudokuBoxes.Add(textBox43);
+            sudokuBoxes.Add(textBox44);
+            sudokuBoxes.Add(textBox45);
+            sudokuBoxes.Add(textBox46);
+            sudokuBoxes.Add(textBox47);
+            sudokuBoxes.Add(textBox48);
+            sudokuBoxes.Add(textBox49);
+            sudokuBoxes.Add(textBox50);
+            sudokuBoxes.Add(textBox51);
+            sudokuBoxes.Add(textBox52);
+            sudokuBoxes.Add(textBox53);
+            sudokuBoxes.Add(textBox54);
+            sudokuBoxes.Add(textBox55);
+            sudokuBoxes.Add(textBox56);
+            sudokuBoxes.Add(textBox57);
+            sudokuBoxes.Add(textBox58);
+            sudokuBoxes.Add(textBox59);
+            sudokuBoxes.Add(textBox60);
+            sudokuBoxes.Add(textBox61);
+            sudokuBoxes.Add(textBox62);
+            sudokuBoxes.Add(textBox63);
+            sudokuBoxes.Add(textBox64);
+            sudokuBoxes.Add(textBox65);
+            sudokuBoxes.Add(textBox66);
+            sudokuBoxes.Add(textBox67);
+            sudokuBoxes.Add(textBox68);
+            sudokuBoxes.Add(textBox69);
+            sudokuBoxes.Add(textBox70);
+            sudokuBoxes.Add(textBox71);
+            sudokuBoxes.Add(textBox72);
+            sudokuBoxes.Add(textBox73);
+            sudokuBoxes.Add(textBox74);
+            sudokuBoxes.Add(textBox75);
+            sudokuBoxes.Add(textBox76);
+            sudokuBoxes.Add(textBox77);
+            sudokuBoxes.Add(textBox78);
+            sudokuBoxes.Add(textBox79);
+            sudokuBoxes.Add(textBox80);
+            sudokuBoxes.Add(textBox81);
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            i++;
+          
             //label9.Text = i.ToString() + "Seconds elapsed";
         }
 
-        private void pauseButton_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)
         {
-            if (timer.Enabled)
-            {
-                timer.Enabled = false;
-                pauseButton.Text = "Resume";
-            }
-
-            else
-            {
-                timer.Enabled = true;
-                pauseButton.Text = "Pause";
-            }
-
+            time = TimeSpan.FromMilliseconds(0);
+            label9.Text = "0:0";
         }
     }
 }
