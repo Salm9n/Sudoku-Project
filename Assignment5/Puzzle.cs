@@ -12,19 +12,25 @@ namespace Assignment5
         private List<int> savedPuzzle;
         private List<int> solutionPuzzle;
         private string path;
+        private string difficulty;
+        private string name;
 
 
         public Puzzle()
         {
             this.path = "";
+            this.difficulty = "";
+            this.name = "";
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
         }
 
-        public Puzzle(string path)
+        public Puzzle(string path, string difficulty, string name)
         {
             this.path = path;
+            this.difficulty = difficulty;
+            this.name = name;
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
@@ -82,6 +88,30 @@ namespace Assignment5
             set
             {
                 value = path;
+            }
+        }
+
+        public string Difficulty
+        {
+            get
+            {
+                return difficulty;
+            }
+            set
+            {
+                value = difficulty;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                value = name;
             }
         }
 

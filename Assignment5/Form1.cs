@@ -30,19 +30,13 @@ namespace Assignment5
 
             readDirectory();
 
-            int i = 0;
-            
-            foreach (int s in puzzleList[0].InitialPuzzle)
-            {
-                Console.WriteLine(i + ": " + s);
-                i++;
-            }
+            fillGameBoard(puzzleList[0].InitialPuzzle);
         }
 
         private void timer_tick(object sender, EventArgs e)
         {
             time = time.Add(TimeSpan.FromMilliseconds(100));
-            label9.Text = string.Format("{0}:{1}", time.Minutes, time.Seconds);
+            label9.Text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
         }
 
         private void pauseButton_Click(object sender, EventArgs e)
@@ -77,7 +71,7 @@ namespace Assignment5
         *   Purpose: Removes the text cursor from a component
         * 
         **************************************************/
-        private void Color_GotFocus(object sender, EventArgs e)
+        private void TextBox_GotFocus(object sender, EventArgs e)
         {
             if (sender as TextBox != null)
             {
@@ -93,126 +87,157 @@ namespace Assignment5
         private void readDirectory()
         {
             string line;
+            string[] fields;
 
             StreamReader file = new System.IO.StreamReader("directory.txt");
 
             while((line = file.ReadLine()) != null)
             {
-                puzzleList.Add(new Puzzle(line));
+                fields = line.Split(new char[] { '/', '.' }); //get the difficulty and name of the puzzle
+                puzzleList.Add(new Puzzle(line, fields[0], fields[1])); //Puzzle([path], [difficulty], [name]);
             }
 
             file.Close();
 
-            /*
-            foreach (Puzzle p in puzzleList){
-                Console.WriteLine(p.Path);
-            }
-            */
-
-            getPuzzles();
+            getPuzzles(); //go read the files found in the directory
         }
 
         private void getPuzzles()
         {
-            StreamReader file;
-
             foreach (Puzzle p in puzzleList)
             {
-                file = new System.IO.StreamReader(p.Path);
+                string[] allLines = File.ReadAllLines(p.Path);
 
-                while ((file.Peek() >= '0' && file.Peek() <= '9') || file.Peek() == '\n')
+                int counter = 1;
+
+                foreach (string line in allLines)
                 {
-                    p.InitialPuzzle.Add((int)Char.GetNumericValue(Convert.ToChar(file.Read())));
-                }
 
-                file.Close();
+                    if(line != "" && counter <= 9) //read the initial puzzle
+                    {
+                        foreach (char c in line)
+                        {
+                            p.InitialPuzzle.Add(Convert.ToInt32(Convert.ToString(c)));
+                        }
+                        counter++;
+                    }
+
+                    else if(line != "" && counter > 9 && counter <= 18) //read the solution puzzle
+                    {
+                        foreach (char c in line)
+                        {
+                            p.SolutionPuzzle.Add(Convert.ToInt32(Convert.ToString(c)));
+                        }
+                        counter++;
+                    }
+
+                    else if(line != "" && counter > 18 && counter <= 27) //read the saved puzzle
+                    {
+                        foreach (char c in line)
+                        {
+                            p.SavedPuzzle.Add(Convert.ToInt32(Convert.ToString(c)));
+                        }
+                        counter++;
+                    }
+                }
             }
 
-        }   
+        }
+
+        private void fillGameBoard(List<int> list)
+        {
+            for(int i = 0; i < sudokuBoxes.Count; i++)
+            {
+                if (list[i] != 0)
+                {
+                    sudokuBoxes[i].Text = Convert.ToString(list[i]);
+                }
+            }
+        }
 
         private void HideCursors()
         {
-            textBox1.GotFocus += Color_GotFocus;
-            textBox2.GotFocus += Color_GotFocus;
-            textBox3.GotFocus += Color_GotFocus;
-            textBox4.GotFocus += Color_GotFocus;
-            textBox5.GotFocus += Color_GotFocus;
-            textBox6.GotFocus += Color_GotFocus;
-            textBox7.GotFocus += Color_GotFocus;
-            textBox8.GotFocus += Color_GotFocus;
-            textBox9.GotFocus += Color_GotFocus;
-            textBox10.GotFocus += Color_GotFocus;
-            textBox11.GotFocus += Color_GotFocus;
-            textBox12.GotFocus += Color_GotFocus;
-            textBox13.GotFocus += Color_GotFocus;
-            textBox14.GotFocus += Color_GotFocus;
-            textBox15.GotFocus += Color_GotFocus;
-            textBox16.GotFocus += Color_GotFocus;
-            textBox17.GotFocus += Color_GotFocus;
-            textBox18.GotFocus += Color_GotFocus;
-            textBox19.GotFocus += Color_GotFocus;
-            textBox20.GotFocus += Color_GotFocus;
-            textBox21.GotFocus += Color_GotFocus;
-            textBox22.GotFocus += Color_GotFocus;
-            textBox23.GotFocus += Color_GotFocus;
-            textBox24.GotFocus += Color_GotFocus;
-            textBox25.GotFocus += Color_GotFocus;
-            textBox26.GotFocus += Color_GotFocus;
-            textBox27.GotFocus += Color_GotFocus;
-            textBox28.GotFocus += Color_GotFocus;
-            textBox29.GotFocus += Color_GotFocus;
-            textBox30.GotFocus += Color_GotFocus;
-            textBox31.GotFocus += Color_GotFocus;
-            textBox32.GotFocus += Color_GotFocus;
-            textBox33.GotFocus += Color_GotFocus;
-            textBox34.GotFocus += Color_GotFocus;
-            textBox35.GotFocus += Color_GotFocus;
-            textBox36.GotFocus += Color_GotFocus;
-            textBox37.GotFocus += Color_GotFocus;
-            textBox38.GotFocus += Color_GotFocus;
-            textBox39.GotFocus += Color_GotFocus;
-            textBox40.GotFocus += Color_GotFocus;
-            textBox41.GotFocus += Color_GotFocus;
-            textBox42.GotFocus += Color_GotFocus;
-            textBox43.GotFocus += Color_GotFocus;
-            textBox44.GotFocus += Color_GotFocus;
-            textBox45.GotFocus += Color_GotFocus;
-            textBox46.GotFocus += Color_GotFocus;
-            textBox47.GotFocus += Color_GotFocus;
-            textBox48.GotFocus += Color_GotFocus;
-            textBox49.GotFocus += Color_GotFocus;
-            textBox50.GotFocus += Color_GotFocus;
-            textBox51.GotFocus += Color_GotFocus;
-            textBox52.GotFocus += Color_GotFocus;
-            textBox53.GotFocus += Color_GotFocus;
-            textBox54.GotFocus += Color_GotFocus;
-            textBox55.GotFocus += Color_GotFocus;
-            textBox56.GotFocus += Color_GotFocus;
-            textBox57.GotFocus += Color_GotFocus;
-            textBox58.GotFocus += Color_GotFocus;
-            textBox59.GotFocus += Color_GotFocus;
-            textBox60.GotFocus += Color_GotFocus;
-            textBox61.GotFocus += Color_GotFocus;
-            textBox62.GotFocus += Color_GotFocus;
-            textBox63.GotFocus += Color_GotFocus;
-            textBox64.GotFocus += Color_GotFocus;
-            textBox65.GotFocus += Color_GotFocus;
-            textBox66.GotFocus += Color_GotFocus;
-            textBox67.GotFocus += Color_GotFocus;
-            textBox68.GotFocus += Color_GotFocus;
-            textBox69.GotFocus += Color_GotFocus;
-            textBox70.GotFocus += Color_GotFocus;
-            textBox71.GotFocus += Color_GotFocus;
-            textBox72.GotFocus += Color_GotFocus;
-            textBox73.GotFocus += Color_GotFocus;
-            textBox74.GotFocus += Color_GotFocus;
-            textBox75.GotFocus += Color_GotFocus;
-            textBox76.GotFocus += Color_GotFocus;
-            textBox77.GotFocus += Color_GotFocus;
-            textBox78.GotFocus += Color_GotFocus;
-            textBox79.GotFocus += Color_GotFocus;
-            textBox80.GotFocus += Color_GotFocus;
-            textBox81.GotFocus += Color_GotFocus;
+            textBox1.GotFocus += TextBox_GotFocus;
+            textBox2.GotFocus += TextBox_GotFocus;
+            textBox3.GotFocus += TextBox_GotFocus;
+            textBox4.GotFocus += TextBox_GotFocus;
+            textBox5.GotFocus += TextBox_GotFocus;
+            textBox6.GotFocus += TextBox_GotFocus;
+            textBox7.GotFocus += TextBox_GotFocus;
+            textBox8.GotFocus += TextBox_GotFocus;
+            textBox9.GotFocus += TextBox_GotFocus;
+            textBox10.GotFocus += TextBox_GotFocus;
+            textBox11.GotFocus += TextBox_GotFocus;
+            textBox12.GotFocus += TextBox_GotFocus;
+            textBox13.GotFocus += TextBox_GotFocus;
+            textBox14.GotFocus += TextBox_GotFocus;
+            textBox15.GotFocus += TextBox_GotFocus;
+            textBox16.GotFocus += TextBox_GotFocus;
+            textBox17.GotFocus += TextBox_GotFocus;
+            textBox18.GotFocus += TextBox_GotFocus;
+            textBox19.GotFocus += TextBox_GotFocus;
+            textBox20.GotFocus += TextBox_GotFocus;
+            textBox21.GotFocus += TextBox_GotFocus;
+            textBox22.GotFocus += TextBox_GotFocus;
+            textBox23.GotFocus += TextBox_GotFocus;
+            textBox24.GotFocus += TextBox_GotFocus;
+            textBox25.GotFocus += TextBox_GotFocus;
+            textBox26.GotFocus += TextBox_GotFocus;
+            textBox27.GotFocus += TextBox_GotFocus;
+            textBox28.GotFocus += TextBox_GotFocus;
+            textBox29.GotFocus += TextBox_GotFocus;
+            textBox30.GotFocus += TextBox_GotFocus;
+            textBox31.GotFocus += TextBox_GotFocus;
+            textBox32.GotFocus += TextBox_GotFocus;
+            textBox33.GotFocus += TextBox_GotFocus;
+            textBox34.GotFocus += TextBox_GotFocus;
+            textBox35.GotFocus += TextBox_GotFocus;
+            textBox36.GotFocus += TextBox_GotFocus;
+            textBox37.GotFocus += TextBox_GotFocus;
+            textBox38.GotFocus += TextBox_GotFocus;
+            textBox39.GotFocus += TextBox_GotFocus;
+            textBox40.GotFocus += TextBox_GotFocus;
+            textBox41.GotFocus += TextBox_GotFocus;
+            textBox42.GotFocus += TextBox_GotFocus;
+            textBox43.GotFocus += TextBox_GotFocus;
+            textBox44.GotFocus += TextBox_GotFocus;
+            textBox45.GotFocus += TextBox_GotFocus;
+            textBox46.GotFocus += TextBox_GotFocus;
+            textBox47.GotFocus += TextBox_GotFocus;
+            textBox48.GotFocus += TextBox_GotFocus;
+            textBox49.GotFocus += TextBox_GotFocus;
+            textBox50.GotFocus += TextBox_GotFocus;
+            textBox51.GotFocus += TextBox_GotFocus;
+            textBox52.GotFocus += TextBox_GotFocus;
+            textBox53.GotFocus += TextBox_GotFocus;
+            textBox54.GotFocus += TextBox_GotFocus;
+            textBox55.GotFocus += TextBox_GotFocus;
+            textBox56.GotFocus += TextBox_GotFocus;
+            textBox57.GotFocus += TextBox_GotFocus;
+            textBox58.GotFocus += TextBox_GotFocus;
+            textBox59.GotFocus += TextBox_GotFocus;
+            textBox60.GotFocus += TextBox_GotFocus;
+            textBox61.GotFocus += TextBox_GotFocus;
+            textBox62.GotFocus += TextBox_GotFocus;
+            textBox63.GotFocus += TextBox_GotFocus;
+            textBox64.GotFocus += TextBox_GotFocus;
+            textBox65.GotFocus += TextBox_GotFocus;
+            textBox66.GotFocus += TextBox_GotFocus;
+            textBox67.GotFocus += TextBox_GotFocus;
+            textBox68.GotFocus += TextBox_GotFocus;
+            textBox69.GotFocus += TextBox_GotFocus;
+            textBox70.GotFocus += TextBox_GotFocus;
+            textBox71.GotFocus += TextBox_GotFocus;
+            textBox72.GotFocus += TextBox_GotFocus;
+            textBox73.GotFocus += TextBox_GotFocus;
+            textBox74.GotFocus += TextBox_GotFocus;
+            textBox75.GotFocus += TextBox_GotFocus;
+            textBox76.GotFocus += TextBox_GotFocus;
+            textBox77.GotFocus += TextBox_GotFocus;
+            textBox78.GotFocus += TextBox_GotFocus;
+            textBox79.GotFocus += TextBox_GotFocus;
+            textBox80.GotFocus += TextBox_GotFocus;
+            textBox81.GotFocus += TextBox_GotFocus;
             
         }
 
