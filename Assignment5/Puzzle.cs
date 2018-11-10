@@ -14,6 +14,7 @@ namespace Assignment5
         private string path;
         private string difficulty;
         private string name;
+        private TimeSpan savedPuzzleTime;
 
 
         public Puzzle()
@@ -21,6 +22,7 @@ namespace Assignment5
             this.path = "";
             this.difficulty = "";
             this.name = "";
+            this.savedPuzzleTime = TimeSpan.Zero;
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
@@ -31,16 +33,10 @@ namespace Assignment5
             this.path = path;
             this.difficulty = difficulty;
             this.name = name;
+            this.savedPuzzleTime = TimeSpan.Zero;
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
-        }
-
-        public Puzzle(List<int> initial, List<int> saved, List<int> solution)
-        {
-            this.initialPuzzle = initial;
-            this.savedPuzzle = saved;
-            this.solutionPuzzle = solution;
         }
 
         public List<int> InitialPuzzle 
@@ -112,6 +108,18 @@ namespace Assignment5
             set
             {
                 value = name;
+            }
+        }
+
+        public TimeSpan SavedPuzzleTime
+        {
+            get
+            {
+                return savedPuzzleTime;
+            }
+            set
+            {
+                value = savedPuzzleTime;
             }
         }
 
