@@ -44,7 +44,7 @@ namespace Assignment5
 
             if (currentPuzzle != null)
             {
-                time = time.Add(TimeSpan.FromMilliseconds(100));
+                time = time.Add(TimeSpan.FromSeconds(0.1));
             }
         }
 
@@ -165,7 +165,11 @@ namespace Assignment5
 
                     else if(line != "" && counter > 27)
                     {
-                        p.SavedPuzzleTime = TimeSpan.Parse(line); //this variable isn't getting set correctly for some reason...This is why the time doesn't load
+                        string[] newTime = line.Split('.');
+                         //p.SavedPuzzleTime = TimeSpan.ParseExact(newTime[0], "hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture); //this variable isn't getting set correctly for some reason...This is why the time doesn't load
+                        TimeSpan ts = TimeSpan.Parse(newTime[0]);
+                        TimeSpan ts1 = new TimeSpan();
+                        p.SetPuzzleTime(ts);
                         Console.WriteLine(p.SavedPuzzleTime);
                         counter++;
                     }
