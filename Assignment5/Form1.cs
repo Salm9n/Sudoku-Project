@@ -15,6 +15,7 @@ namespace Assignment5
     public partial class Form1 : Form
     {
         Timer gameTimer = new Timer();
+        Timer t = new Timer();
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private TimeSpan time = new TimeSpan();
         List<TextBox> sudokuBoxes = new List<TextBox>();
@@ -573,7 +574,17 @@ namespace Assignment5
             else
             {
                 Console.WriteLine("Lose");
+                label12.Visible = true;
+                t.Interval = 3000;
+                t.Tick += TimerHideLabel_Tick;
+                t.Start();
             }
+        }
+
+        private void TimerHideLabel_Tick(object sender, EventArgs e)
+        {
+            label12.Visible = false;
+            t.Stop();
         }
 
         private void button5_Click(object sender, EventArgs e)

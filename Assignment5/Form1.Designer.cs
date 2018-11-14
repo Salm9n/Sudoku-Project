@@ -132,6 +132,7 @@
             this.hideBox = new System.Windows.Forms.TextBox();
             this.solutionButton = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -1473,11 +1474,24 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.DarkRed;
+            this.label12.Location = new System.Drawing.Point(268, 535);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(508, 32);
+            this.label12.TabIndex = 102;
+            this.label12.Text = "Your solution is incorrect. Dont give up!";
+            this.label12.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1103, 634);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.solutionButton);
             this.Controls.Add(this.hideBox);
@@ -1692,6 +1706,7 @@
         private System.Windows.Forms.TextBox hideBox;
         private System.Windows.Forms.Button solutionButton;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Label label12;
     }
 }
 
