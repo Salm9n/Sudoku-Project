@@ -22,12 +22,14 @@ namespace Assignment5
         List<Puzzle> easyPuzzleList = new List<Puzzle>();
         List<Puzzle> mediumPuzzleList = new List<Puzzle>();
         List<Puzzle> hardPuzzleList = new List<Puzzle>();
+        List<int> userSolution = new List<int>();
         Puzzle currentPuzzle;
         static Random rnd = new Random();
 
         public Form1()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;    //center it 
             HideCursors();
             makeList();
             timer.Interval = 100;
@@ -35,6 +37,12 @@ namespace Assignment5
             timer.Enabled = true;
 
             readDirectory();
+        }
+
+        public TimeSpan Time
+        {
+            get => time;
+            set { time = value; }        //getters needed for form 2
         }
 
 
@@ -55,12 +63,14 @@ namespace Assignment5
             {
                 timer.Enabled = false;
                 pauseButton.Text = "Resume";
+                hideBox.Visible = true;
             }
 
             else
             {
                 timer.Enabled = true;
                 pauseButton.Text = "Pause";
+                hideBox.Visible = false;
             }
 
         }
@@ -83,7 +93,7 @@ namespace Assignment5
             {
                 HideCaret(((TextBox)sender).Handle);
 
-                if(((TextBox)sender).ReadOnly == false)
+                if (((TextBox)sender).ReadOnly == false)
                 {
                     ((TextBox)sender).BackColor = Color.PaleTurquoise; //sets the color of the selected textbox
                 }
@@ -110,7 +120,7 @@ namespace Assignment5
 
             StreamReader file = new System.IO.StreamReader("directory.txt");
 
-            while((line = file.ReadLine()) != null)
+            while ((line = file.ReadLine()) != null)
             {
                 fields = line.Split(new char[] { '/', '.' }); //get the difficulty and name of the puzzle
                 puzzleList.Add(new Puzzle(line, fields[0], fields[1])); //Puzzle([path], [difficulty], [name]);
@@ -136,7 +146,7 @@ namespace Assignment5
                 foreach (string line in allLines)
                 {
 
-                    if(line != "" && counter <= 9) //read the initial puzzle
+                    if (line != "" && counter <= 9) //read the initial puzzle
                     {
                         foreach (char c in line)
                         {
@@ -145,7 +155,7 @@ namespace Assignment5
                         counter++;
                     }
 
-                    else if(line != "" && counter > 9 && counter <= 18) //read the solution puzzle
+                    else if (line != "" && counter > 9 && counter <= 18) //read the solution puzzle
                     {
                         foreach (char c in line)
                         {
@@ -154,7 +164,7 @@ namespace Assignment5
                         counter++;
                     }
 
-                    else if(line != "" && counter > 18 && counter <= 27) //read the saved puzzle
+                    else if (line != "" && counter > 18 && counter <= 27) //read the saved puzzle
                     {
                         foreach (char c in line)
                         {
@@ -163,10 +173,10 @@ namespace Assignment5
                         counter++;
                     }
 
-                    else if(line != "" && counter > 27)
+                    else if (line != "" && counter > 27)
                     {
                         string[] newTime = line.Split('.');
-                         //p.SavedPuzzleTime = TimeSpan.ParseExact(newTime[0], "hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture); //this variable isn't getting set correctly for some reason...This is why the time doesn't load
+                        //p.SavedPuzzleTime = TimeSpan.ParseExact(newTime[0], "hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture); //this variable isn't getting set correctly for some reason...This is why the time doesn't load
                         TimeSpan ts = TimeSpan.Parse(newTime[0]);
                         TimeSpan ts1 = new TimeSpan();
                         p.SetPuzzleTime(ts);
@@ -212,7 +222,7 @@ namespace Assignment5
         **************************************************/
         private void fillGameBoard(List<int> list, bool startup)
         {
-            for(int i = 0; i < sudokuBoxes.Count; i++)
+            for (int i = 0; i < sudokuBoxes.Count; i++)
             {
                 if (list[i] != 0)
                 {
@@ -241,11 +251,11 @@ namespace Assignment5
 
             if (sender as Button != null)
             {
-                if(((Button)sender).Text == "Easy")
+                if (((Button)sender).Text == "Easy")
                 {
-
+                    
                     int r = rnd.Next(easyPuzzleList.Count());
-                    if(easyPuzzleList[r].SavedPuzzle.Count == 0)
+                    if (easyPuzzleList[r].SavedPuzzle.Count == 0)
                     {
                         fillGameBoard(easyPuzzleList[r].InitialPuzzle, true);
                         time = TimeSpan.Zero;
@@ -300,25 +310,30 @@ namespace Assignment5
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            ((Button)sender).Select();
-            foreach (TextBox t in sudokuBoxes)
-            {
-                t.Text = "";
-                t.ReadOnly = false;
-            }
+            /*  ((Button)sender).Select();
+              foreach (TextBox t in sudokuBoxes)
+              {
+                  t.Text = "";
+                  t.ReadOnly = false;
+              }
 
-            time = TimeSpan.Zero;
-            currentPuzzle = null;
-            label9.Text = "0:0";
+              time = TimeSpan.Zero;
+              currentPuzzle = null;
+              label9.Text = "0:0"; */
+            currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;        //this works technically but for some reason it doesnt reset in real time but only later if user finds the puzzle again
+             fillGameBoard(currentPuzzle.InitialPuzzle, true);
+          //  currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;
+            //fillGameBoard(currentPuzzle.SavedPuzzle, false);
+          
         }
 
 
         private void SaveProgress_Click(object sender, EventArgs e)
         {
             List<int> temp = new List<int>();
-            for(int i = 0; i < sudokuBoxes.Count; i++)
+            for (int i = 0; i < sudokuBoxes.Count; i++)
             {
-                if(sudokuBoxes[i].Text == "")
+                if (sudokuBoxes[i].Text == "")
                 {
                     temp.Add(0);
                 }
@@ -532,6 +547,49 @@ namespace Assignment5
             sudokuBoxes.Add(textBox79);
             sudokuBoxes.Add(textBox80);
             sudokuBoxes.Add(textBox81);
+        }
+
+        private void solutionButton_Click(object sender, EventArgs e)
+        {
+            bool equal;
+            try
+            {
+                equal = currentPuzzle.SavedPuzzle.SequenceEqual(currentPuzzle.SolutionPuzzle);
+            }
+            catch(Exception f)
+            {
+                equal = false;
+
+            }
+
+            if (equal == true)
+            {
+                Console.WriteLine("You win");
+                timer.Enabled = false;
+                Form f2 = new Form2(this);
+                f2.Show();
+
+            }
+            else
+            {
+                Console.WriteLine("Lose");
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            int index, solution;
+            foreach (int number in currentPuzzle.SavedPuzzle)
+            {
+                if (number == 0)
+                {
+                        index = currentPuzzle.SavedPuzzle[number];
+                        solution = currentPuzzle.SolutionPuzzle[index];         //an idea that kiinda worked? it worked once then never worked again rofl
+                        currentPuzzle.SavedPuzzle[index] = solution;
+                        break;
+                }
+            }
+            //fillGameBoard(currentPuzzle.SavedPuzzle, false);
         }
     }
 }
