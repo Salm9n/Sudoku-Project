@@ -322,7 +322,14 @@ namespace Assignment5
               currentPuzzle = null;
               label9.Text = "0:0"; */
             currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;        //this works technically but for some reason it doesnt reset in real time but only later if user finds the puzzle again
-             fillGameBoard(currentPuzzle.InitialPuzzle, true);
+            getPuzzles();
+            foreach (TextBox t in sudokuBoxes)
+            {
+                //clearing the board
+                t.Text = "";
+                t.ReadOnly = false;
+            }
+            fillGameBoard(currentPuzzle.InitialPuzzle, true);
           //  currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;
             //fillGameBoard(currentPuzzle.SavedPuzzle, false);
           
@@ -595,12 +602,20 @@ namespace Assignment5
                 if (number == 0)
                 {
                         index = currentPuzzle.SavedPuzzle[number];
+                    Console.WriteLine(index);
                         solution = currentPuzzle.SolutionPuzzle[index];         //an idea that kiinda worked? it worked once then never worked again rofl
-                        currentPuzzle.SavedPuzzle[index] = solution;
+                    Console.WriteLine(solution);
+                    currentPuzzle.SavedPuzzle[index] = solution;
                         break;
                 }
             }
-            //fillGameBoard(currentPuzzle.SavedPuzzle, false);
+           /* foreach (TextBox t in sudokuBoxes)
+            {
+                //clearing the board
+                t.Text = "";
+                t.ReadOnly = false;
+            }
+            fillGameBoard(currentPuzzle.SavedPuzzle, false); */
         }
     }
 }
