@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+/*****************************************
+ * 
+ *  Programmers: Salman Mohammed, Ryne Heron
+ * 
+ *       Course: CSCI 473
+ * 
+ *   Assignment: 5
+ *         Date: November 15, 2018
+ * 
+ *****************************************/
+
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assignment5
 {
-    class Puzzle
+    public class Puzzle
     {
         private List<int> initialPuzzle;
         private List<int> savedPuzzle;
@@ -15,6 +26,7 @@ namespace Assignment5
         private string difficulty;
         private string name;
         private TimeSpan savedPuzzleTime;
+        private TimeSpan bestTime;
 
 
         public Puzzle()
@@ -25,7 +37,6 @@ namespace Assignment5
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
-           // this.savedPuzzleTime = new TimeSpan();
         }
 
         public Puzzle(string path, string difficulty, string name)
@@ -36,12 +47,17 @@ namespace Assignment5
             initialPuzzle = new List<int>();
             savedPuzzle = new List<int>();
             solutionPuzzle = new List<int>();
-           // this.savedPuzzleTime = new TimeSpan();
+            bestTime = new TimeSpan();
         }
 
        public void SetPuzzleTime (TimeSpan ts)
         {
             savedPuzzleTime = ts;
+        }
+
+        public void SetBestTime (TimeSpan ts)
+        {
+            bestTime = ts;
         }
 
         public List<int> InitialPuzzle 
@@ -128,5 +144,16 @@ namespace Assignment5
             }
         }
 
+        public TimeSpan BestTime
+        {
+            get
+            {
+                return bestTime;
+            }
+            set
+            {
+                value = bestTime;
+            }
+        }
     }
 }

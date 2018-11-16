@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*****************************************
+ * 
+ *  Programmers: Salman Mohammed, Ryne Heron
+ * 
+ *       Course: CSCI 473
+ * 
+ *   Assignment: 5
+ *         Date: November 15, 2018
+ * 
+ *****************************************/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,7 +50,10 @@ namespace Assignment5
 
             readDirectory();
         }
+        //getter for currentPuzzle (for form2)
+        public Puzzle CurrentPuzzle => currentPuzzle;
 
+        //property for time (for form2)
         public TimeSpan Time
         {
             get => time;
@@ -47,6 +61,13 @@ namespace Assignment5
         }
 
 
+        /***************************************************
+        * 
+        *   timer_tick()
+        * 
+        *   Purpose: Keeps track of time and updates Timer output
+        * 
+        **************************************************/
         private void timer_tick(object sender, EventArgs e)
         {
             label9.Text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
@@ -58,6 +79,14 @@ namespace Assignment5
         }
 
 
+        /***************************************************
+        * 
+        *   pauseButton_Click()
+        * 
+        *   Purpose: The eventhandler for the button that
+        *       pauses/unpauses the Timer
+        * 
+        **************************************************/
         private void pauseButton_Click(object sender, EventArgs e)
         {
             if (timer.Enabled)
@@ -102,6 +131,16 @@ namespace Assignment5
         }
 
 
+        /***************************************************
+        * 
+        *   TextBox_Leave()
+        * 
+        *   Purpose: The event handler for the TextBoxes
+        *       on the board. They focus is shifted away
+        *       from a TextBox (the user is not in that
+        *       TextBox), the color goes back to it's original color
+        * 
+        **************************************************/
         private void TextBox_Leave(object sender, EventArgs e)
         {
             if (sender as TextBox != null)
@@ -113,7 +152,14 @@ namespace Assignment5
             }
         }
 
-
+        /***************************************************
+        * 
+        *   readDirectory()
+        *   
+        *   Purpose: Reads the directory file and creates
+        *       a puzzle for each puzzle file found
+        * 
+        **************************************************/
         private void readDirectory()
         {
             string line;
@@ -132,7 +178,15 @@ namespace Assignment5
             getPuzzles(); //go read the files found in the directory
         }
 
-
+        /***************************************************
+        * 
+        *   fillGameBoard()
+        *   
+        *   Purpose: Reads every line of every puzzle file
+        *       and fills the already existing Puzzle object
+        *       with the data from the file.
+        * 
+        **************************************************/
         private void getPuzzles()
         {
             easyPuzzleList.Clear();
@@ -174,19 +228,24 @@ namespace Assignment5
                         counter++;
                     }
 
-                    else if (line != "" && counter > 27)
+                    else if (line != "" && counter == 28) //the recorded saved puzzle time
                     {
                         string[] newTime = line.Split('.');
-                        //p.SavedPuzzleTime = TimeSpan.ParseExact(newTime[0], "hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture); //this variable isn't getting set correctly for some reason...This is why the time doesn't load
                         TimeSpan ts = TimeSpan.Parse(newTime[0]);
-                        TimeSpan ts1 = new TimeSpan();
                         p.SetPuzzleTime(ts);
-                        Console.WriteLine(p.SavedPuzzleTime);
+                        counter++;
+                    }
+
+                    else if (line != "" && counter == 29) // the recorded best time
+                    {
+                        string[] newTime = line.Split('.');
+                        TimeSpan ts = TimeSpan.Parse(newTime[0]);
+                        p.SetBestTime(ts);
                         counter++;
                     }
                 }
 
-                //setting the difficulty lists
+                //filling the difficulty lists
                 if (p.Difficulty == "easy")
                 {
                     easyPuzzleList.Add(p);
@@ -237,6 +296,16 @@ namespace Assignment5
         }
 
 
+        /***************************************************
+        * 
+        *   selectPuzzle_Click()
+        *   
+        *   Purpose: Event handler for the three buttons that let
+        *       the user select a difficulty. A random puzzle
+        *       will be loaded into the board every time
+        *       one of these difficulty buttons is pressed.
+        * 
+        **************************************************/
         private void selectPuzzle_Click(object sender, EventArgs e)
         {
             ((Button)sender).Select(); //sometimes if you have your mouse in a box and then change a puzzle, that box might be readonly,
@@ -299,43 +368,57 @@ namespace Assignment5
                     currentPuzzle = hardPuzzleList[r];
                 }
             }
+            for (int i = 0; i < sudokuBoxes.Count; i++) //try to make sure the correct answers are not changeable
+            {
+                if (sudokuBoxes[i].Text == currentPuzzle.InitialPuzzle[i].ToString())
+                {
+                    sudokuBoxes[i].ReadOnly = true;
+                }
+            }
         }
 
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
-            //label9.Text = i.ToString() + "Seconds elapsed";
-        }
-
-
+        /***************************************************
+        * 
+        *   Reset_Click()
+        *   
+        *   Purpose: The event handler for the reset button.
+        *       This will reset the timer to 0, and load
+        *       up the initial puzzle. It will erase the user's progress,
+        *       although the progress really gets reset if the user
+        *       saves after pressing reset
+        * 
+        **************************************************/
         private void Reset_Click(object sender, EventArgs e)
         {
-            /*  ((Button)sender).Select();
-              foreach (TextBox t in sudokuBoxes)
-              {
-                  t.Text = "";
-                  t.ReadOnly = false;
-              }
-
-              time = TimeSpan.Zero;
-              currentPuzzle = null;
-              label9.Text = "0:0"; */
-            currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;        //this works technically but for some reason it doesnt reset in real time but only later if user finds the puzzle again
+            time = TimeSpan.Zero;
+            currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;
             getPuzzles();
             foreach (TextBox t in sudokuBoxes)
             {
                 //clearing the board
                 t.Text = "";
-                t.ReadOnly = false;
             }
             fillGameBoard(currentPuzzle.InitialPuzzle, true);
-          //  currentPuzzle.SavedPuzzle = currentPuzzle.InitialPuzzle;
-            //fillGameBoard(currentPuzzle.SavedPuzzle, false);
-          
         }
 
 
+        /***************************************************
+        * 
+        *   SaveProgress_Click()
+        * 
+        *   Purpose: The event handler for the Save Progress
+        *       button. This will try to take what is on the
+        *       board and save it to the same txt file it
+        *       was loaded from. It checks whether or not
+        *       there is an already existing saved puzzle. If
+        *       there isn't, it just appends the data to the file.
+        *       If there is a saved puzzle, it will remove the saved
+        *       puzzle, the time, and the best recorded time. THEN
+        *       it will append all of the data that is stored in
+        *       the currentPuzzle Puzzle object.
+        * 
+        **************************************************/
         private void SaveProgress_Click(object sender, EventArgs e)
         {
             List<int> temp = new List<int>();
@@ -370,22 +453,32 @@ namespace Assignment5
             {
                 currentPuzzle.SavedPuzzle.Clear();
                 string[] lines = File.ReadAllLines(currentPuzzle.Path);
-                File.WriteAllLines(currentPuzzle.Path, lines.Take(lines.Length - 11).ToArray());
+                File.WriteAllLines(currentPuzzle.Path, lines.Take(lines.Length - 12).ToArray());
 
                 for (int i = 0; i < temp.Count; i++)
                 {
                     File.AppendAllText(currentPuzzle.Path, Convert.ToString(temp[i]));
-                    if ((i + 1) % 9 == 0 && i != 0)
+                    if ((i + 1) % 9 == 0 && i != 0) //tried to put new lines between puzzles/times. Sometimes it works?
                     {
                         File.AppendAllText(currentPuzzle.Path, Environment.NewLine);
                     }
                 }
             }
-            File.AppendAllText(currentPuzzle.Path, Environment.NewLine);
-            File.AppendAllText(currentPuzzle.Path, Convert.ToString(time));
+            File.AppendAllText(currentPuzzle.Path, Environment.NewLine + Convert.ToString(time)); //append timer
+
+            File.AppendAllText(currentPuzzle.Path, Environment.NewLine + Convert.ToString(currentPuzzle.BestTime)); //append best time
             getPuzzles();
         }
 
+        /***************************************************
+        * 
+        *   TextBox_Leave()
+        * 
+        *   Purpose: Adds the eventHandler to get
+        *       rid of the blinking text cursor in
+        *       the TextBoxes
+        * 
+        **************************************************/
         private void HideCursors()
         {
             textBox1.GotFocus += TextBox_GotFocus;
@@ -472,6 +565,14 @@ namespace Assignment5
         }
 
 
+        /***************************************************
+        * 
+        *   makeList() 
+        * 
+        *   Purpose: adds all the TextBoxes from the game board
+        *       to one list, so they can be accessed more easily
+        * 
+        **************************************************/
         private void makeList()
         {
             sudokuBoxes.Add(textBox1);
@@ -557,30 +658,51 @@ namespace Assignment5
             sudokuBoxes.Add(textBox81);
         }
 
+
+        /***************************************************
+        * 
+        *   solutionButton_Click() 
+        * 
+        *   Purpose: The event handler for the Check Solution
+        *       button. It will check if the game board matches
+        *       the puzzle solution from the file. If it is correct,
+        *       a dialog box will pop up telling the user they won.
+        *       It will also check if the time it took to solve the puzzle
+        *       beat the previous best time.
+        * 
+        **************************************************/
         private void solutionButton_Click(object sender, EventArgs e)
         {
-            bool equal;
-            try
-            {
-                equal = currentPuzzle.SavedPuzzle.SequenceEqual(currentPuzzle.SolutionPuzzle);
-            }
-            catch(Exception f)
-            {
-                equal = false;
+            bool isCorrect = true;
 
+            for(int i = 0; i < sudokuBoxes.Count; i++)
+            {
+                if (currentPuzzle != null)
+                {
+                    if (sudokuBoxes[i].Text != currentPuzzle.SolutionPuzzle[i].ToString())
+                    {
+                        isCorrect = false;
+                    }
+                }
             }
 
-            if (equal == true)
+            if (isCorrect == true)
             {
-                Console.WriteLine("You win");
                 timer.Enabled = false;
                 Form f2 = new Form2(this);
                 f2.Show();
 
+                if (time < currentPuzzle.BestTime || currentPuzzle.BestTime == TimeSpan.Zero || currentPuzzle.BestTime == null)
+                {
+                    currentPuzzle.SetBestTime(time);
+                    string[] lines = File.ReadAllLines(currentPuzzle.Path);
+                    File.WriteAllLines(currentPuzzle.Path, lines.Take(lines.Length - 1));
+                    File.AppendAllText(currentPuzzle.Path, currentPuzzle.BestTime.ToString());
+                }
+                getPuzzles();
             }
             else
             {
-                Console.WriteLine("Lose");
                 label12.Visible = true;
                 t.Interval = 3000;
                 t.Tick += TimerHideLabel_Tick;
@@ -588,12 +710,29 @@ namespace Assignment5
             }
         }
 
+
+        /***************************************************
+        * 
+        *   TimerHideLabel_Tick()
+        *   
+        *   Purpose: 
+        * 
+        **************************************************/
         private void TimerHideLabel_Tick(object sender, EventArgs e)
         {
             label12.Visible = false;
             t.Stop();
         }
 
+
+        /***************************************************
+        * 
+        *   button5_Click()
+        * 
+        *   Purpose: The event handler for Tips button.
+        *       This is not fully implemented yet.
+        * 
+        **************************************************/
         private void button5_Click(object sender, EventArgs e)
         {
             int index, solution;
@@ -601,21 +740,29 @@ namespace Assignment5
             {
                 if (number == 0)
                 {
-                        index = currentPuzzle.SavedPuzzle[number];
-                    Console.WriteLine(index);
-                        solution = currentPuzzle.SolutionPuzzle[index];         //an idea that kiinda worked? it worked once then never worked again rofl
-                    Console.WriteLine(solution);
+                    index = currentPuzzle.SavedPuzzle[number];
+                    //Console.WriteLine(index);
+                    solution = currentPuzzle.SolutionPuzzle[index];         //an idea that kiinda worked? it worked once then never worked again rofl
+                    //Console.WriteLine(solution);
                     currentPuzzle.SavedPuzzle[index] = solution;
-                        break;
+                    break;
                 }
             }
-           /* foreach (TextBox t in sudokuBoxes)
-            {
-                //clearing the board
-                t.Text = "";
-                t.ReadOnly = false;
-            }
-            fillGameBoard(currentPuzzle.SavedPuzzle, false); */
+        }
+
+        /***************************************************
+        * 
+        *   textBox_KeyPress() 
+        * 
+        *   Purpose: The event handler added to each TextBox
+        *       on the game board. It doesn't allow the
+        *       user to enter non-numerical characters
+        * 
+        **************************************************/
+        private void textBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var validKeys = new[] { Keys.Back, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9 };
+            e.Handled = !validKeys.Contains((Keys)e.KeyChar);
         }
     }
 }

@@ -4,6 +4,17 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+/*****************************************
+ * 
+ *  Programmers: Salman Mohammed, Ryne Heron
+ * 
+ *       Course: CSCI 473
+ * 
+ *   Assignment: 5
+ *         Date: November 15, 2018
+ * 
+ *****************************************/
+
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,12 +41,14 @@ namespace Assignment5
             String time1 = Convert.ToString(ts);
             newTime = time1.Split('.');
             label4.Text = newTime[0];
-        }
-
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
+            if(this.CallingForm.CurrentPuzzle.BestTime != null)
+            {
+                label5.Text = this.CallingForm.CurrentPuzzle.BestTime.ToString();
+            }
+            else
+            {
+                label5.Text = "None";
+            }
         }
     }
 }
